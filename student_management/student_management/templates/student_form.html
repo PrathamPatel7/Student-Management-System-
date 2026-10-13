@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit student' if editing else 'Add student' }} · RollBook{% endblock %}
+{% block content %}
+<div class="head">
+  <h1>{{ 'Edit student' if editing else 'Add student' }}</h1>
+</div>
+
+<form class="form" method="post">
+  <div class="grid">
+    <div>
+      <label for="roll_no">Roll number</label>
+      <input id="roll_no" name="roll_no" value="{{ student.roll_no }}" placeholder="e.g. CE2024001" required>
+    </div>
+    <div>
+      <label for="name">Full name</label>
+      <input id="name" name="name" value="{{ student.name }}" required>
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="{{ student.email }}" required>
+    </div>
+    <div>
+      <label for="phone">Phone <span class="muted">(optional)</span></label>
+      <input id="phone" name="phone" value="{{ student.phone or '' }}" placeholder="10 digit number">
+    </div>
+    <div>
+      <label for="course">Course</label>
+      <select id="course" name="course" required>
+        <option value="">Choose a course</option>
+        {% for c in courses %}
+          <option value="{{ c }}" {{ 'selected' if c == student.course }}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="year">Year</label>
+      <select id="year" name="year" required>
+        <option value="">Choose a year</option>
+        {% for y in years %}
+          <option value="{{ y }}" {{ 'selected' if student.year|string == y|string }}>Year {{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">{{ 'Save changes' if editing else 'Add student' }}</button>
+    <a class="btn ghost" href="{{ url_for('students') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

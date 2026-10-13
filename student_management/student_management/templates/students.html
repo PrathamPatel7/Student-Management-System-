@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Students · RollBook{% endblock %}
+{% block content %}
+<div class="head">
+  <h1>Students <small>({{ students|length }})</small></h1>
+  <a class="btn primary" href="{{ url_for('add_student') }}">Add student</a>
+</div>
+
+<form class="filters" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search by name, roll number or email">
+  <select name="course">
+    <option value="">All courses</option>
+    {% for c in courses %}
+      <option value="{{ c }}" {{ 'selected' if c == course }}>{{ c }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Search</button>
+  {% if q or course %}<a class="btn ghost" href="{{ url_for('students') }}">Clear</a>{% endif %}
+</form>
+
+{% if students %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Roll no</th><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>Year</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for s in students %}
+      <tr>
+        <td class="roll">{{ s.roll_no }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.phone or '—' }}</td>
+        <td>{{ s.course }}</td>
+        <td>{{ s.year }}</td>
+        <td class="actions">
+          <a class="btn small" href="{{ url_for('edit_student', student_id=s.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('delete_student', student_id=s.id) }}"
+                onsubmit="return confirm('Delete this student? This cannot be undone.');">
+            <button class="btn small danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  <p class="empty big">
+    {% if q or course %}No students match your search. Try a different name or clear the filters.
+    {% else %}No students yet. <a href="{{ url_for('add_student') }}">Add the first student.</a>{% endif %}
+  </p>
+{% endif %}
+{% endblock %}

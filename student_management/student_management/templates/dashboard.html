@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · RollBook{% endblock %}
+{% block content %}
+<div class="head">
+  <h1>Dashboard</h1>
+  <a class="btn primary" href="{{ url_for('add_student') }}">Add student</a>
+</div>
+
+<div class="summary">
+  <div class="total">
+    <span class="num">{{ total }}</span>
+    <span class="label">students enrolled</span>
+  </div>
+  <div class="years">
+    {% for y in by_year %}
+      <div><b>{{ y.n }}</b> in year {{ y.year }}</div>
+    {% else %}
+      <div>No year data yet.</div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="two-col">
+  <section class="panel">
+    <h2>Students per course</h2>
+    {% for c in by_course %}
+      <div class="bar-row">
+        <div class="bar-label">{{ c.course }}</div>
+        <div class="bar"><i style="width: {{ (c.n / biggest * 100)|round|int }}%"></i></div>
+        <div class="bar-n">{{ c.n }}</div>
+      </div>
+    {% else %}
+      <p class="empty">No students yet. <a href="{{ url_for('add_student') }}">Add the first one.</a></p>
+    {% endfor %}
+  </section>
+
+  <section class="panel">
+    <h2>Recently added</h2>
+    {% for s in recent %}
+      <a class="recent" href="{{ url_for('edit_student', student_id=s.id) }}">
+        <span>{{ s.name }}</span>
+        <small>{{ s.roll_no }} · Year {{ s.year }}</small>
+      </a>
+    {% else %}
+      <p class="empty">Nothing here yet.</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}
